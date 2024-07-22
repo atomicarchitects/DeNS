@@ -1,0 +1,140 @@
+trainer: denoising_forces
+
+
+dataset:
+  train:
+    format: lmdb
+    src: #/datasets01/open_catalyst/oc20/082422/struct_to_energy_forces/train/2M
+    key_mapping:
+      y: energy
+      force: forces
+    transforms:
+      normalizer:
+        energy:
+          mean: -0.7554450631141663
+          stdev: 2.887317180633545
+        forces:
+          mean: 0.0
+          stdev: 2.887317180633545
+  val:
+    src: #/datasets01/open_catalyst/oc20/082422/struct_to_energy_forces/val/id_30k
+
+
+logger:
+  name: wandb
+  project: equiformer_v2
+
+
+task:
+  strict_load: True
+  # dataset: lmdb
+  # train_on_free_atoms: True
+  # eval_on_free_atoms: True
+  # primary_metric: forces_mae
+  # relaxation_steps: 200
+  # write_pos: True
+  # # num_relaxation_batches: 100
+  # relax_dataset:
+  #   src: /datasets01/open_catalyst/oc20/082422/init_to_relaxed/test/id/data.lmdb
+  # relax_opt:
+  #   name: lbfgs
+  #   maxstep: 0.04
+  #   memory: 50
+  #   damping: 1.0
+  #   alpha: 70.0
+  #   traj_dir: 
+  
+
+loss_functions:
+  - energy:
+      fn: mae
+      coefficient: 2
+  - forces:
+      fn: l2mae
+      coefficient: 100
+
+
+evaluation_metrics:
+  primary_metric: forces_mae
+  metrics:
+    energy:
+      - mae
+    forces:
+      - forcesx_mae
+      - forcesy_mae
+      - forcesz_mae
+      - mae
+      - cosine_similarity
+      - magnitude_error
+
+
+outputs:
+  energy:
+    level: system
+  forces:
+    level: atom
+    train_on_free_atoms: True
+    eval_on_free_atoms: True
+
+
+slurm:
+  constraint: "volta32gb"
+
+
+model:
+  name:                         escn_dens
+  num_layers:                   12
+  max_neighbors:                20
+  cutoff:                       12.0
+  sphere_channels:              128
+  hidden_channels:              256
+  lmax_list:                    [6]
+  mmax_list:                    [2]
+  num_sphere_samples:           128
+  distance_function:            "gaussian"
+  regress_forces:               True
+  use_pbc:                      True
+  basis_width_scalar:           2.0
+  otf_graph:                    True
+  use_force_encoding:           True
+  show_timing_info:             False
+
+  
+optim:
+  batch_size:                   6
+  eval_batch_size:              6
+  load_balancing:               atoms
+  num_workers:                  8
+  lr_initial:                   0.0008
+
+  optimizer:                    AdamW
+  optimizer_params:
+    amsgrad:                    True
+    weight_decay:               0.01
+  scheduler:                    LambdaLR
+  scheduler_params:
+    lambda_type:                multistep
+    warmup_factor:              0.2
+    warmup_epochs:              0.01
+    decay_epochs:               [11.7, 15, 18.3]
+    decay_rate:                 0.3
+
+  max_epochs:                   20
+  clip_grad_norm:               100
+  ema_decay:                    0.999
+  loss_energy:                  mae
+  loss_force:                   l2mae
+
+  eval_every:                   5000
+
+  # for denoising positions
+  use_denoising_pos:            True
+  denoising_pos_params:
+    prob:                       0.5       # probability to switch between denoising positions and S2EF
+    fixed_noise_std:            True
+    std:                        0.15
+    num_steps:                  50
+    std_low:                    0.01
+    std_high:                   0.5
+    corrupt_ratio:              0.5
+  denoising_pos_coefficient:    10
