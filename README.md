@@ -4,7 +4,7 @@
 **[Paper](https://arxiv.org/abs/2403.09549)**
 
 
-This repository contains the official PyTorch implementation of the work "Generalizing Denoising to Non-Equilibrium Structures Improves Equivariant Force Fields" (ArXiv 2024).
+This repository contains the official PyTorch implementation of the work "Generalizing Denoising to Non-Equilibrium Structures Improves Equivariant Force Fields" (TMLR 2024).
 We show that force encoding enables generalizing denoising to non-equilibrium structures and propose to use **DeNS** (**De**noising **N**on-Equilibrium **S**tructures) as an auxiliary task to improve the performance on energy and force predictions.
 
 We provide the code for training [EquiformerV2](https://arxiv.org/abs/2306.12059) with DeNS on OC20 and OC22 datasets here and training [Equiformer](https://arxiv.org/abs/2206.11990) with DeNS on MD17 in this [repository](https://github.com/atomicarchitects/equiformer).
