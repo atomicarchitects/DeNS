@@ -1,7 +1,7 @@
 # Generalizing Denoising to Non-Equilibrium Structures Improves Equivariant Force Fields
 
 
-**[Paper](https://arxiv.org/abs/2403.09549)**
+**[Paper](https://arxiv.org/abs/2403.09549)** | **[OpenReview](https://openreview.net/forum?id=whGzYUbIWA)**
 
 
 This repository contains the official PyTorch implementation of the work "Generalizing Denoising to Non-Equilibrium Structures Improves Equivariant Force Fields" (TMLR 2024).
