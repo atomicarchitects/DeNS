@@ -35,6 +35,13 @@ We provide the code for training [EquiformerV2](https://arxiv.org/abs/2306.12059
 </p>
 
 
+As demonstrated in [OMat24](https://arxiv.org/abs/2410.12771) paper, EquiformerV2 + DeNS achieves state-of-the-art results on [Matbench Discovery](https://matbench-discovery.materialsproject.org/) leaderboard as of October 18, 2024.
+
+<p align="center">
+	<img src="fig/equiformer_v2_dens_matbench_discovery.png" alt="photo not available" width="98%" height="98%">
+</p>
+
+
 ## Content ##
 0. [Environment Setup](#environment-setup)
 0. [File Structure](#file-structure)
